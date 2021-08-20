@@ -368,12 +368,7 @@ public class Main extends JavaPlugin implements Listener {
     }
     
     private void startCheck() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                Methods.updateAuction();
-            }
-        }.runTaskTimer(this, 20, 5 * 20);
+        Bukkit.getScheduler().runTaskTimer(this, Methods::updateAuction, 20, 5 * 20);
     }
     
     private ArrayList<Material> getDamageableItems() {
