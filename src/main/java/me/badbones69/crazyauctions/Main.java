@@ -4,7 +4,6 @@ import me.badbones69.crazyauctions.api.*;
 import me.badbones69.crazyauctions.api.FileManager.Files;
 import me.badbones69.crazyauctions.api.events.AuctionListEvent;
 import me.badbones69.crazyauctions.controllers.GUI;
-import me.badbones69.crazyauctions.controllers.Metrics;
 import me.badbones69.crazyauctions.currency.Vault;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -40,7 +39,6 @@ public class Main extends JavaPlugin implements Listener {
             saveDefaultConfig();
         }
         Messages.addMissingMessages();
-        new Metrics(this); //Starts up bStats
     }
     
     @Override
