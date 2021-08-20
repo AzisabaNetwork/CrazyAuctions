@@ -23,6 +23,7 @@ import org.yaml.snakeyaml.error.YAMLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.UUID;
 
 public class Main extends JavaPlugin implements Listener {
     
@@ -98,7 +99,7 @@ public class Main extends JavaPlugin implements Listener {
                     ItemStack item = Methods.getItemInHand((Player) sender);
                     if (item != null && item.getType() != Material.AIR) {
                         // For testing as another player
-                        String seller = "Test-Account";
+                        String seller = ((Player) sender).getUniqueId().toString();
                         for (int it = 1; it <= times; it++) {
                             int num = 1;
                             Random r = new Random();
@@ -311,7 +312,7 @@ public class Main extends JavaPlugin implements Listener {
                             player.sendMessage(Messages.BOOK_NOT_ALLOWED.getMessage());
                             return true;
                         }
-                        String seller = player.getName();
+                        String seller = player.getUniqueId().toString();
                         // For testing as another player
                         //String seller = "Test-Account";
                         int num = 1;
