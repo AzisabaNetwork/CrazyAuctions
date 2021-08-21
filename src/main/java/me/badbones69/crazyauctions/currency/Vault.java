@@ -53,7 +53,7 @@ public class Vault {
         if (player.isOnline()) {
             econ.depositPlayer(player, amount);
         } else {
-            Files.DATA.getFile().set("pendingDeposit." + player.getUniqueId(), amount);
+            Files.DATA.getFile().set("pendingDeposit." + player.getUniqueId(), Files.DATA.getFile().getLong("pendingDeposit." + player.getUniqueId(), 0) + amount);
             Files.DATA.saveFile();
         }
     }
@@ -62,7 +62,7 @@ public class Vault {
         if (player.isOnline()) {
             econ.depositPlayer(player, amount);
         } else {
-            Files.DATA.getFile().set("pendingDeposit." + player.getUniqueId(), amount);
+            Files.DATA.getFile().set("pendingDeposit." + player.getUniqueId(), Files.DATA.getFile().getLong("pendingDeposit." + player.getUniqueId(), 0) + amount);
             Files.DATA.saveFile();
         }
     }
@@ -72,7 +72,7 @@ public class Vault {
         if (player != null && player.isOnline()) {
             econ.depositPlayer(player, amount);
         } else {
-            Files.DATA.getFile().set("pendingDeposit." + uuid, amount);
+            Files.DATA.getFile().set("pendingDeposit." + uuid, Files.DATA.getFile().getLong("pendingDeposit." + uuid, 0) + amount);
             Files.DATA.saveFile();
         }
     }
