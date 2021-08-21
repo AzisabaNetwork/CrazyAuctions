@@ -234,10 +234,16 @@ public class Methods {
             return null;
         }
     }
-    
-    @SuppressWarnings("deprecation")
-    public static OfflinePlayer getOfflinePlayer(String name) {
-        return Bukkit.getServer().getOfflinePlayer(name);
+
+    private static final Map<UUID, OfflinePlayer> cache = new HashMap<>();
+
+    public static OfflinePlayer getOfflinePlayer(UUID uuid) {
+        if (cache.get(uuid) == null) {
+            OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
+            cache.put(uuid, player);
+            Bukkit.getScheduler().runTaskLater(Methods.plugin, () -> cache.remove(uuid), 20 * 60 * 60);
+        }
+        return cache.get(uuid);
     }
     
     public static Location getLoc(Player player) {
@@ -401,8 +407,8 @@ public class Methods {
                         String winner = data.getString("Items." + i + ".TopBidder");
                         String seller = data.getString("Items." + i + ".Seller");
                         Long price = data.getLong("Items." + i + ".Price");
-                        CurrencyManager.addMoney(Bukkit.getOfflinePlayer(UUID.fromString(seller)), price);
-                        CurrencyManager.removeMoney(Bukkit.getOfflinePlayer(UUID.fromString(winner)), price);
+                        CurrencyManager.addMoney(getOfflinePlayer(UUID.fromString(seller)), price);
+                        CurrencyManager.removeMoney(getOfflinePlayer(UUID.fromString(winner)), price);
                         HashMap<String, String> placeholders = new HashMap<>();
                         placeholders.put("%Price%", getPrice(i, false));
                         placeholders.put("%price%", getPrice(i, false));

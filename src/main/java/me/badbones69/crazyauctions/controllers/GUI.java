@@ -67,7 +67,7 @@ public class GUI implements Listener {
                     } else {
                         if (sell == ShopType.SELL) {
                             for (String l : config.getStringList("Settings.GUISettings.SellingItemLore")) {
-                                String sellerName = Bukkit.getOfflinePlayer(UUID.fromString(data.getString("Items." + i + ".Seller"))).getName();
+                                String sellerName = Methods.getOfflinePlayer(UUID.fromString(data.getString("Items." + i + ".Seller"))).getName();
                                 lore.add(l.replace("%Price%", String.format(Locale.ENGLISH, "%,d", Long.parseLong(Methods.getPrice(i, false)))).replace("%price%", String.format(Locale.ENGLISH, "%,d", Long.parseLong(Methods.getPrice(i, false)))).replace("%Seller%", sellerName).replace("%seller%", sellerName).replace("%Time%", Methods.convertToTime(data.getLong("Items." + i + ".Time-Till-Expire"))).replace("%time%", Methods.convertToTime(data.getLong("Items." + i + ".Time-Till-Expire"))));
                             }
                             items.add(Methods.addLore(data.getItemStack("Items." + i + ".Item").clone(), lore));
@@ -658,7 +658,7 @@ public class GUI implements Listener {
                                                         if (Methods.isOnline(seller) && sellerPlayer != null) {
                                                             sellerPlayer.sendMessage(Messages.ADMIN_FORCE_CANCELLED_TO_PLAYER.getMessage());
                                                         }
-                                                        AuctionCancelledEvent event = new AuctionCancelledEvent((sellerPlayer != null ? sellerPlayer : Bukkit.getOfflinePlayer(seller)), data.getItemStack("Items." + i + ".Item"), CancelledReason.ADMIN_FORCE_CANCEL);
+                                                        AuctionCancelledEvent event = new AuctionCancelledEvent((sellerPlayer != null ? sellerPlayer : Methods.getOfflinePlayer(UUID.fromString(seller))), data.getItemStack("Items." + i + ".Item"), CancelledReason.ADMIN_FORCE_CANCEL);
                                                         Bukkit.getPluginManager().callEvent(event);
                                                         data.set("OutOfTime/Cancelled." + num + ".Seller", data.getString("Items." + i + ".Seller"));
                                                         data.set("OutOfTime/Cancelled." + num + ".Full-Time", data.getLong("Items." + i + ".Full-Time"));
@@ -777,7 +777,7 @@ public class GUI implements Listener {
                                     ItemStack i = data.getItemStack("Items." + ID + ".Item");
                                     Bukkit.getPluginManager().callEvent(new AuctionBuyEvent(player, i, cost, seller));
                                     CurrencyManager.removeMoney(player, cost);
-                                    CurrencyManager.addMoney(Bukkit.getOfflinePlayer(UUID.fromString(seller)), cost);
+                                    CurrencyManager.addMoney(Methods.getOfflinePlayer(UUID.fromString(seller)), cost);
                                     HashMap<String, String> placeholders = new HashMap<>();
                                     placeholders.put("%Price%", Methods.getPrice(ID, false));
                                     placeholders.put("%price%", Methods.getPrice(ID, false));
