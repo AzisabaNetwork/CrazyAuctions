@@ -345,7 +345,7 @@ public class FileManager {
         /**
          * Overrides the loaded state file and loads the file systems file.
          */
-        public void relaodFile() {
+        public void reloadFile() {
             getInstance().reloadFile(this);
         }
         

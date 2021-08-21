@@ -401,8 +401,8 @@ public class Methods {
                         String winner = data.getString("Items." + i + ".TopBidder");
                         String seller = data.getString("Items." + i + ".Seller");
                         Long price = data.getLong("Items." + i + ".Price");
-                        CurrencyManager.addMoney(getOfflinePlayer(seller), price);
-                        CurrencyManager.removeMoney(getOfflinePlayer(winner), price);
+                        CurrencyManager.addMoney(Bukkit.getOfflinePlayer(UUID.fromString(seller)), price);
+                        CurrencyManager.removeMoney(Bukkit.getOfflinePlayer(UUID.fromString(winner)), price);
                         HashMap<String, String> placeholders = new HashMap<>();
                         placeholders.put("%Price%", getPrice(i, false));
                         placeholders.put("%price%", getPrice(i, false));

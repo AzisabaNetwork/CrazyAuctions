@@ -4,11 +4,13 @@ import me.badbones69.crazyauctions.api.*;
 import me.badbones69.crazyauctions.api.FileManager.Files;
 import me.badbones69.crazyauctions.api.events.AuctionListEvent;
 import me.badbones69.crazyauctions.controllers.GUI;
+import me.badbones69.crazyauctions.currency.CurrencyManager;
 import me.badbones69.crazyauctions.currency.Vault;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -49,6 +51,20 @@ public class Main extends JavaPlugin implements Listener {
         int file = 0;
         Bukkit.getScheduler().cancelTask(file);
         Files.DATA.saveFile();
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent e) {
+        Bukkit.getScheduler().runTaskLater(this, () -> {
+            if (!e.getPlayer().isOnline()) return;
+            FileConfiguration config = Files.DATA.getFile();
+            long amount = config.getLong("pendingDeposit." + e.getPlayer().getUniqueId(), 0);
+            if (amount <= 0) return;
+            config.set("pendingDeposit." + e.getPlayer().getUniqueId(), null);
+            Files.DATA.saveFile();
+            CurrencyManager.addMoney(e.getPlayer(), amount);
+            getLogger().info("Given $" + amount + " to " + e.getPlayer().getName() + " (trigger: pendingDeposit)");
+        }, 40);
     }
     
     public boolean onCommand(CommandSender sender, Command cmd, String commandLable, String[] args) {

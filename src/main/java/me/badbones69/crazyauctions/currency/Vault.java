@@ -1,11 +1,14 @@
 package me.badbones69.crazyauctions.currency;
 
+import me.badbones69.crazyauctions.api.FileManager.Files;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
+
+import java.util.UUID;
 
 public class Vault {
     
@@ -47,11 +50,31 @@ public class Vault {
     }
     
     public static void addMoney(Player player, Long amount) {
-        econ.depositPlayer(player, amount);
+        if (player.isOnline()) {
+            econ.depositPlayer(player, amount);
+        } else {
+            Files.DATA.getFile().set("pendingDeposit." + player.getUniqueId(), amount);
+            Files.DATA.saveFile();
+        }
     }
     
     public static void addMoney(OfflinePlayer player, Long amount) {
-        econ.depositPlayer(player, amount);
+        if (player.isOnline()) {
+            econ.depositPlayer(player, amount);
+        } else {
+            Files.DATA.getFile().set("pendingDeposit." + player.getUniqueId(), amount);
+            Files.DATA.saveFile();
+        }
+    }
+
+    public static void addMoney(UUID uuid, Long amount) {
+        Player player = Bukkit.getPlayer(uuid);
+        if (player != null && player.isOnline()) {
+            econ.depositPlayer(player, amount);
+        } else {
+            Files.DATA.getFile().set("pendingDeposit." + uuid, amount);
+            Files.DATA.saveFile();
+        }
     }
     
 }
