@@ -67,7 +67,7 @@ public class GUI implements Listener {
                     } else {
                         if (sell == ShopType.SELL) {
                             for (String l : config.getStringList("Settings.GUISettings.SellingItemLore")) {
-                                String sellerName = Methods.getOfflinePlayer(UUID.fromString(data.getString("Items." + i + ".Seller"))).getName();
+                                String sellerName = Methods.getOfflinePlayerName(UUID.fromString(data.getString("Items." + i + ".Seller")));
                                 lore.add(l.replace("%Price%", String.format(Locale.ENGLISH, "%,d", Long.parseLong(Methods.getPrice(i, false)))).replace("%price%", String.format(Locale.ENGLISH, "%,d", Long.parseLong(Methods.getPrice(i, false)))).replace("%Seller%", sellerName).replace("%seller%", sellerName).replace("%Time%", Methods.convertToTime(data.getLong("Items." + i + ".Time-Till-Expire"))).replace("%time%", Methods.convertToTime(data.getLong("Items." + i + ".Time-Till-Expire"))));
                             }
                             items.add(Methods.addLore(data.getItemStack("Items." + i + ".Item").clone(), lore));

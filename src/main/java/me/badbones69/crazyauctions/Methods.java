@@ -245,6 +245,17 @@ public class Methods {
         }
         return cache.get(uuid);
     }
+
+    private static final Map<UUID, String> nameCache = new HashMap<>();
+
+    public static String getOfflinePlayerName(UUID uuid) {
+        if (nameCache.get(uuid) == null) {
+            OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
+            nameCache.put(uuid, player.getName());
+            Bukkit.getScheduler().runTaskLater(Methods.plugin, () -> nameCache.remove(uuid), 20 * 60 * 60);
+        }
+        return nameCache.get(uuid);
+    }
     
     public static Location getLoc(Player player) {
         return player.getLocation();
