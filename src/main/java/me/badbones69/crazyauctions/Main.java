@@ -217,6 +217,10 @@ public class Main extends JavaPlugin implements Listener {
                             if (!Methods.hasPermission(player, "Bid")) return true;
                         }
                         ItemStack item = Methods.getItemInHand(player);
+                        if (item.getType().name().contains("SHULKER_BOX")) {
+                            player.sendMessage(Messages.BOOK_NOT_ALLOWED.getMessage());
+                            return true;
+                        }
                         int amount = item.getAmount();
                         if (args.length >= 3) {
                             if (!Methods.isInt(args[2])) {
