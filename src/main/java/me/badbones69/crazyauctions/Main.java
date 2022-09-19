@@ -363,11 +363,12 @@ public class Main extends JavaPlugin implements Listener {
                             Files.DATA.getFile().set("Items." + num + ".Biddable", false);
                         }
                         Files.DATA.getFile().set("Items." + num + ".TopBidder", "None");
-                        ItemStack I = item.clone();
-                        I.setAmount(amount);
-                        Files.DATA.getFile().set("Items." + num + ".Item", I);
+                        ItemStack stack = item.clone();
+                        stack.setAmount(amount);
+                        Files.DATA.getFile().set("Items." + num + ".Item", stack);
+                        Files.DATA.getFile().set("Items." + num + ".ItemBytes", stack.serializeAsBytes());
                         Files.DATA.saveFile();
-                        Bukkit.getPluginManager().callEvent(new AuctionListEvent(player, type, I, price));
+                        Bukkit.getPluginManager().callEvent(new AuctionListEvent(player, type, stack, price));
                         HashMap<String, String> placeholders = new HashMap<>();
                         placeholders.put("%Price%", price + "");
                         placeholders.put("%price%", price + "");

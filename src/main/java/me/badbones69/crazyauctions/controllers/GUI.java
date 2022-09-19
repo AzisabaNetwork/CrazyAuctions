@@ -57,7 +57,13 @@ public class GUI implements Listener {
                     if (data.getBoolean("Items." + i + ".Biddable")) {
                         if (sell == ShopType.BID) {
                             String seller = Methods.getOfflinePlayerName(UUID.fromString(data.getString("Items." + i + ".Seller")));
-                            String topbidder = data.getString("Items." + i + ".TopBidder");
+                            String topBidderString = data.getString("Items." + i + ".TopBidder");
+                            String topbidder;
+                            if (topBidderString == null || topBidderString.equals("None")) {
+                                topbidder = "None";
+                            } else {
+                                topbidder = Methods.getOfflinePlayerName(UUID.fromString(topBidderString));
+                            }
                             for (String l : config.getStringList("Settings.GUISettings.Bidding")) {
                                 lore.add(l.replace("%TopBid%", Methods.getPrice(i, false)).replace("%topbid%", Methods.getPrice(i, false)).replace("%Seller%", seller).replace("%seller%", seller).replace("%TopBidder%", topbidder).replace("%topbidder%", topbidder).replace("%Time%", Methods.convertToTime(data.getLong("Items." + i + ".Time-Till-Expire"))).replace("%time%", Methods.convertToTime(data.getLong("Items." + i + ".Time-Till-Expire"))));
                             }
@@ -322,23 +328,23 @@ public class GUI implements Listener {
         Inventory inv = Bukkit.createInventory(null, 27, Methods.color(config.getString("Settings.Bidding-On-Item")));
         if (!bidding.containsKey(player)) bidding.put(player, 0);
         if (Version.isNewer(Version.v1_12_R1)) {
-            inv.setItem(9, Methods.makeItem("LIME_STAINED_GLASS_PANE", 1, "&a+1"));
-            inv.setItem(10, Methods.makeItem("LIME_STAINED_GLASS_PANE", 1, "&a+10"));
-            inv.setItem(11, Methods.makeItem("LIME_STAINED_GLASS_PANE", 1, "&a+100"));
-            inv.setItem(12, Methods.makeItem("LIME_STAINED_GLASS_PANE", 1, "&a+1000"));
-            inv.setItem(14, Methods.makeItem("RED_STAINED_GLASS_PANE", 1, "&c-1000"));
-            inv.setItem(15, Methods.makeItem("RED_STAINED_GLASS_PANE", 1, "&c-100"));
-            inv.setItem(16, Methods.makeItem("RED_STAINED_GLASS_PANE", 1, "&c-10"));
-            inv.setItem(17, Methods.makeItem("RED_STAINED_GLASS_PANE", 1, "&c-1"));
+            inv.setItem(9, Methods.makeItem("LIME_STAINED_GLASS_PANE", 1, "&a+100000"));
+            inv.setItem(10, Methods.makeItem("LIME_STAINED_GLASS_PANE", 1, "&a+1000000"));
+            inv.setItem(11, Methods.makeItem("LIME_STAINED_GLASS_PANE", 1, "&a+10000000"));
+            inv.setItem(12, Methods.makeItem("LIME_STAINED_GLASS_PANE", 1, "&a+100000000"));
+            inv.setItem(14, Methods.makeItem("RED_STAINED_GLASS_PANE", 1, "&c-100000000"));
+            inv.setItem(15, Methods.makeItem("RED_STAINED_GLASS_PANE", 1, "&c-10000000"));
+            inv.setItem(16, Methods.makeItem("RED_STAINED_GLASS_PANE", 1, "&c-1000000"));
+            inv.setItem(17, Methods.makeItem("RED_STAINED_GLASS_PANE", 1, "&c-100000"));
         } else {
-            inv.setItem(9, Methods.makeItem("160:5", 1, "&a+1"));
-            inv.setItem(10, Methods.makeItem("160:5", 1, "&a+10"));
-            inv.setItem(11, Methods.makeItem("160:5", 1, "&a+100"));
-            inv.setItem(12, Methods.makeItem("160:5", 1, "&a+1000"));
-            inv.setItem(14, Methods.makeItem("160:14", 1, "&c-1000"));
-            inv.setItem(15, Methods.makeItem("160:14", 1, "&c-100"));
-            inv.setItem(16, Methods.makeItem("160:14", 1, "&c-10"));
-            inv.setItem(17, Methods.makeItem("160:14", 1, "&c-1"));
+            inv.setItem(9, Methods.makeItem("160:5", 1, "&a+100000"));
+            inv.setItem(10, Methods.makeItem("160:5", 1, "&a+1000000"));
+            inv.setItem(11, Methods.makeItem("160:5", 1, "&a+10000000"));
+            inv.setItem(12, Methods.makeItem("160:5", 1, "&a+100000000"));
+            inv.setItem(14, Methods.makeItem("160:14", 1, "&c-100000000"));
+            inv.setItem(15, Methods.makeItem("160:14", 1, "&c-10000000"));
+            inv.setItem(16, Methods.makeItem("160:14", 1, "&c-1000000"));
+            inv.setItem(17, Methods.makeItem("160:14", 1, "&c-100000"));
         }
         inv.setItem(13, getBiddingGlass(player, ID));
         inv.setItem(22, Methods.makeItem(config.getString("Settings.GUISettings.OtherSettings.Bid.Item"), 1, config.getString("Settings.GUISettings.OtherSettings.Bid.Name"), config.getStringList("Settings.GUISettings.OtherSettings.Bid.Lore")));
@@ -428,7 +434,13 @@ public class GUI implements Listener {
         FileConfiguration config = Files.CONFIG.getFile();
         FileConfiguration data = Files.DATA.getFile();
         String seller = data.getString("Items." + ID + ".Seller");
-        String topbidder = data.getString("Items." + ID + ".TopBidder");
+        String topBidderString = data.getString("Items." + ID + ".TopBidder");
+        String topbidder;
+        if (topBidderString == null || topBidderString.equals("None")) {
+            topbidder = "None";
+        } else {
+            topbidder = Methods.getOfflinePlayerName(UUID.fromString(topBidderString));
+        }
         ItemStack item = data.getItemStack("Items." + ID + ".Item");
         List<String> lore = new ArrayList<>();
         for (String l : config.getStringList("Settings.GUISettings.Bidding")) {
@@ -545,14 +557,14 @@ public class GUI implements Listener {
                                     return;
                                 }
                                 HashMap<String, Integer> priceEdits = new HashMap<>();
-                                priceEdits.put("&a+1", 1);
-                                priceEdits.put("&a+10", 10);
-                                priceEdits.put("&a+100", 100);
-                                priceEdits.put("&a+1000", 1000);
-                                priceEdits.put("&c-1", -1);
-                                priceEdits.put("&c-10", -10);
-                                priceEdits.put("&c-100", -100);
-                                priceEdits.put("&c-1000", -1000);
+                                priceEdits.put("&a+100000", 100000);
+                                priceEdits.put("&a+1000000", 1000000);
+                                priceEdits.put("&a+10000000", 10000000);
+                                priceEdits.put("&a+100000000", 100000000);
+                                priceEdits.put("&c-100000", -100000);
+                                priceEdits.put("&c-1000000", -1000000);
+                                priceEdits.put("&c-10000000", -10000000);
+                                priceEdits.put("&c-100000000", -100000000);
                                 for (String price : priceEdits.keySet()) {
                                     if (item.getItemMeta().getDisplayName().equals(Methods.color(price))) {
                                         try {
