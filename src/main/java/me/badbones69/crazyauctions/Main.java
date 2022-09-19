@@ -23,6 +23,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.yaml.snakeyaml.error.YAMLException;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.UUID;
@@ -366,7 +367,7 @@ public class Main extends JavaPlugin implements Listener {
                         ItemStack stack = item.clone();
                         stack.setAmount(amount);
                         Files.DATA.getFile().set("Items." + num + ".Item", stack);
-                        Files.DATA.getFile().set("Items." + num + ".ItemBytes", stack.serializeAsBytes());
+                        Files.DATA.getFile().set("Items." + num + ".ItemBytes", Base64.getEncoder().encodeToString(stack.serializeAsBytes()));
                         Files.DATA.saveFile();
                         Bukkit.getPluginManager().callEvent(new AuctionListEvent(player, type, stack, price));
                         HashMap<String, String> placeholders = new HashMap<>();
