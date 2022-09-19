@@ -32,7 +32,11 @@ public class Methods {
             Matcher matcher = HEX_PATTERN.matcher(message);
             StringBuffer buffer = new StringBuffer();
             while (matcher.find()) {
-                matcher.appendReplacement(buffer, net.md_5.bungee.api.ChatColor.of(matcher.group()).toString());
+                StringBuilder legacy = new StringBuilder("\u00a7x");
+                for (char c : matcher.group().substring(1).toCharArray()) {
+                    legacy.append('\u00a7').append(c);
+                }
+                matcher.appendReplacement(buffer, legacy.toString());
             }
             return ChatColor.translateAlternateColorCodes('&', matcher.appendTail(buffer).toString());
         }
