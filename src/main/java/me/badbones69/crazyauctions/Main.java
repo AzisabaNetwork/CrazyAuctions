@@ -371,8 +371,9 @@ public class Main extends JavaPlugin implements Listener {
                         Files.DATA.saveFile();
                         Bukkit.getPluginManager().callEvent(new AuctionListEvent(player, type, stack, price));
                         HashMap<String, String> placeholders = new HashMap<>();
-                        placeholders.put("%Price%", price + "");
-                        placeholders.put("%price%", price + "");
+                        String priceFormatted = String.format("%,d", price);
+                        placeholders.put("%Price%", priceFormatted);
+                        placeholders.put("%price%", priceFormatted);
                         player.sendMessage(Messages.ADDED_ITEM_TO_AUCTION.getMessage(placeholders));
                         if (item.getAmount() <= 1 || (item.getAmount() - amount) <= 0) {
                             Methods.setItemInHand(player, new ItemStack(Material.AIR));
