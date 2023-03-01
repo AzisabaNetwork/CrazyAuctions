@@ -7,6 +7,7 @@ import me.badbones69.crazyauctions.api.Version;
 import me.badbones69.crazyauctions.api.events.AuctionExpireEvent;
 import me.badbones69.crazyauctions.api.events.AuctionWinBidEvent;
 import me.badbones69.crazyauctions.currency.CurrencyManager;
+import me.badbones69.crazyauctions.util.ItemUtil;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -450,6 +451,7 @@ public class Methods {
                         }
                         AuctionExpireEvent event = new AuctionExpireEvent(player, data.getItemStack("Items." + i + ".Item"));
                         Bukkit.getPluginManager().callEvent(event);
+                        ItemUtil.log(plugin.getLogger(), data.getItemStack("Items." + i + ".Item"));
                         data.set("OutOfTime/Cancelled." + num + ".Seller", data.getString("Items." + i + ".Seller"));
                         data.set("OutOfTime/Cancelled." + num + ".Full-Time", fullExpireTime.getTimeInMillis());
                         data.set("OutOfTime/Cancelled." + num + ".StoreID", data.getInt("Items." + i + ".StoreID"));

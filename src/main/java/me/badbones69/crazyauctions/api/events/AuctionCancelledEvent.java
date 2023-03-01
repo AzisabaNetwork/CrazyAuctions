@@ -1,11 +1,15 @@
 package me.badbones69.crazyauctions.api.events;
 
+import me.badbones69.crazyauctions.Main;
 import me.badbones69.crazyauctions.api.enums.CancelledReason;
+import me.badbones69.crazyauctions.util.ItemUtil;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.logging.Logger;
 
 /**
  *
@@ -33,6 +37,7 @@ public class AuctionCancelledEvent extends Event {
         this.item = item;
         this.isOnline = false;
         this.reason = reason;
+        log();
     }
     
     /**
@@ -45,6 +50,17 @@ public class AuctionCancelledEvent extends Event {
         this.item = item;
         this.isOnline = true;
         this.reason = reason;
+        log();
+    }
+
+    private void log() {
+        Logger logger = Main.getPlugin(Main.class).getLogger();
+        if (onlinePlayer != null) {
+            logger.info("Auction by " + onlinePlayer.getName() + " was cancelled because " + reason.name() + ":");
+        } else {
+            logger.info("Auction by " + offlinePlayer.getName() + " was cancelled because " + reason.name() + ":");
+        }
+        ItemUtil.log(logger, item);
     }
     
     public static HandlerList getHandlerList() {

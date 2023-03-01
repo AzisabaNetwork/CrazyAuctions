@@ -6,6 +6,7 @@ import me.badbones69.crazyauctions.api.events.AuctionListEvent;
 import me.badbones69.crazyauctions.controllers.GUI;
 import me.badbones69.crazyauctions.currency.CurrencyManager;
 import me.badbones69.crazyauctions.currency.Vault;
+import me.badbones69.crazyauctions.util.ItemUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -370,6 +371,8 @@ public class Main extends JavaPlugin implements Listener {
                         Files.DATA.getFile().set("Items." + num + ".ItemBytes", Base64.getEncoder().encodeToString(stack.serializeAsBytes()));
                         Files.DATA.saveFile();
                         Bukkit.getPluginManager().callEvent(new AuctionListEvent(player, type, stack, price));
+                        getLogger().info("Added item to auction by " + player.getName() + " for $" + price);
+                        ItemUtil.log(getLogger(), stack);
                         HashMap<String, String> placeholders = new HashMap<>();
                         String priceFormatted = String.format("%,d", price);
                         placeholders.put("%Price%", priceFormatted);

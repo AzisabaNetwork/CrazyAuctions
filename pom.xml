@@ -11,16 +11,8 @@
 
     <repositories>
         <repository>
-            <id>acrylic-repo</id>
-            <url>https://repo.acrylicstyle.xyz/repository/maven-public/</url>
-        </repository>
-        <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-        </repository>
-        <repository>
-            <id>vault-repo</id>
-            <url>http://nexus.hc.to/content/repositories/pub_releases</url>
         </repository>
         <repository>
             <id>reserve-repo</id>
@@ -33,6 +25,10 @@
         <repository>
             <id>paper</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
+        </repository>
+        <repository>
+            <id>azisaba-repo</id>
+            <url>https://repo.azisaba.net/repository/maven-public/</url>
         </repository>
     </repositories>
 
@@ -59,6 +55,12 @@
             <groupId>net.tnemc</groupId>
             <artifactId>Reserve</artifactId>
             <version>0.1.5.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.azisaba</groupId>
+            <artifactId>LifeCore</artifactId>
+            <version>6.0.1</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

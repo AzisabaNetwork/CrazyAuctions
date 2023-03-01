@@ -8,6 +8,7 @@ import me.badbones69.crazyauctions.api.events.AuctionBuyEvent;
 import me.badbones69.crazyauctions.api.events.AuctionCancelledEvent;
 import me.badbones69.crazyauctions.api.events.AuctionNewBidEvent;
 import me.badbones69.crazyauctions.currency.CurrencyManager;
+import me.badbones69.crazyauctions.util.ItemUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -803,6 +804,8 @@ public class GUI implements Listener {
                                         Player sell = Methods.getPlayer(seller);
                                         sell.sendMessage(Messages.PLAYER_BOUGHT_ITEM.getMessage(placeholders));
                                     }
+                                    plugin.getLogger().info("Player " + player.getName() + " bought item from " + seller + " for $" + cost + ":");
+                                    ItemUtil.log(plugin.getLogger(), i);
                                     player.getInventory().addItem(i);
                                     data.set("Items." + ID, null);
                                     Files.DATA.saveFile();
