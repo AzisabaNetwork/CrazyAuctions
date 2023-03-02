@@ -451,6 +451,7 @@ public class Methods {
                         }
                         AuctionExpireEvent event = new AuctionExpireEvent(player, data.getItemStack("Items." + i + ".Item"));
                         Bukkit.getPluginManager().callEvent(event);
+                        plugin.getLogger().info("Auction by " + seller + " has expired:");
                         ItemUtil.log(plugin.getLogger(), data.getItemStack("Items." + i + ".Item"));
                         data.set("OutOfTime/Cancelled." + num + ".Seller", data.getString("Items." + i + ".Seller"));
                         data.set("OutOfTime/Cancelled." + num + ".Full-Time", fullExpireTime.getTimeInMillis());
