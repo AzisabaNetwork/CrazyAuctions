@@ -30,10 +30,10 @@ import java.util.Random;
 import java.util.UUID;
 
 public class Main extends JavaPlugin implements Listener {
-    
+
     public static FileManager fileManager = FileManager.getInstance();
     public static CrazyAuctions crazyAuctions = CrazyAuctions.getInstance();
-    
+
     @Override
     public void onEnable() {
         fileManager.logInfo(true).setup(this);
@@ -47,7 +47,7 @@ public class Main extends JavaPlugin implements Listener {
         }
         Messages.addMissingMessages();
     }
-    
+
     @Override
     public void onDisable() {
         int file = 0;
@@ -66,9 +66,9 @@ public class Main extends JavaPlugin implements Listener {
             Files.DATA.saveFile();
             CurrencyManager.addMoney(e.getPlayer(), amount);
             getLogger().info("Given $" + amount + " to " + e.getPlayer().getName() + " (trigger: pendingDeposit)");
-        }, 40);
+        }, 400);
     }
-    
+
     public boolean onCommand(CommandSender sender, Command cmd, String commandLable, String[] args) {
         if (commandLable.equalsIgnoreCase("CrazyAuctions") || commandLable.equalsIgnoreCase("CrazyAuction") || commandLable.equalsIgnoreCase("CA") || commandLable.equalsIgnoreCase("AH") || commandLable.equalsIgnoreCase("HDV")) {
             if (args.length == 0) {
@@ -393,11 +393,11 @@ public class Main extends JavaPlugin implements Listener {
         sender.sendMessage(Messages.CRAZYAUCTIONS_HELP.getMessage());
         return false;
     }
-    
+
     private void startCheck() {
         Bukkit.getScheduler().runTaskTimer(this, Methods::updateAuction, 20, 5 * 20);
     }
-    
+
     private ArrayList<Material> getDamageableItems() {
         ArrayList<Material> ma = new ArrayList<>();
         if (Version.isNewer(Version.v1_12_R1)) {

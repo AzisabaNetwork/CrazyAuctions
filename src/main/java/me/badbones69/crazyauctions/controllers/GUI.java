@@ -1,5 +1,6 @@
 package me.badbones69.crazyauctions.controllers;
 
+import me.badbones69.crazyauctions.Main;
 import me.badbones69.crazyauctions.Methods;
 import me.badbones69.crazyauctions.api.*;
 import me.badbones69.crazyauctions.api.FileManager.Files;
@@ -24,9 +25,10 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.*;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class GUI implements Listener {
-    
+
     private static HashMap<Player, Integer> bidding = new HashMap<>();
     private static HashMap<Player, String> biddingID = new HashMap<>();
     private static HashMap<Player, ShopType> shopType = new HashMap<>(); // Shop Type
@@ -35,7 +37,7 @@ public class GUI implements Listener {
     private static HashMap<Player, String> IDs = new HashMap<>();
     private static CrazyAuctions crazyAuctions = CrazyAuctions.getInstance();
     private static Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("CrazyAuctions");
-    
+
     public static void openShop(Player player, ShopType sell, Category cat, int page) {
         Methods.updateAuction();
         FileConfiguration config = Files.CONFIG.getFile();
@@ -137,7 +139,7 @@ public class GUI implements Listener {
         List.put(player, Id);
         player.openInventory(inv);
     }
-    
+
     public static void openCategories(Player player, ShopType shop) {
         Methods.updateAuction();
         FileConfiguration config = Files.CONFIG.getFile();
@@ -171,7 +173,7 @@ public class GUI implements Listener {
         shopType.put(player, shop);
         player.openInventory(inv);
     }
-    
+
     public static void openPlayersCurrentList(Player player, int page) {
         Methods.updateAuction();
         FileConfiguration config = Files.CONFIG.getFile();
@@ -217,7 +219,7 @@ public class GUI implements Listener {
         List.put(player, Id);
         player.openInventory(inv);
     }
-    
+
     public static void openPlayersExpiredList(Player player, int page) {
         Methods.updateAuction();
         FileConfiguration config = Files.CONFIG.getFile();
@@ -270,7 +272,7 @@ public class GUI implements Listener {
         List.put(player, Id);
         player.openInventory(inv);
     }
-    
+
     public static void openBuying(Player player, String ID) {
         Methods.updateAuction();
         FileConfiguration config = Files.CONFIG.getFile();
@@ -316,7 +318,7 @@ public class GUI implements Listener {
         IDs.put(player, ID);
         player.openInventory(inv);
     }
-    
+
     public static void openBidding(Player player, String ID) {
         Methods.updateAuction();
         FileConfiguration config = Files.CONFIG.getFile();
@@ -349,11 +351,11 @@ public class GUI implements Listener {
         }
         inv.setItem(13, getBiddingGlass(player, ID));
         inv.setItem(22, Methods.makeItem(config.getString("Settings.GUISettings.OtherSettings.Bid.Item"), 1, config.getString("Settings.GUISettings.OtherSettings.Bid.Name"), config.getStringList("Settings.GUISettings.OtherSettings.Bid.Lore")));
-        
+
         inv.setItem(4, getBiddingItem(player, ID));
         player.openInventory(inv);
     }
-    
+
     public static void openViewer(Player player, String other, int page) {
         Methods.updateAuction();
         FileConfiguration config = Files.CONFIG.getFile();
@@ -412,7 +414,7 @@ public class GUI implements Listener {
         List.put(player, new ArrayList<>(Methods.getPageInts(ID, page)));
         player.openInventory(inv);
     }
-    
+
     public static ItemStack getBiddingGlass(Player player, String ID) {
         FileConfiguration config = Files.CONFIG.getFile();
         String id = config.getString("Settings.GUISettings.OtherSettings.Bidding.Item");
@@ -430,7 +432,7 @@ public class GUI implements Listener {
         }
         return item;
     }
-    
+
     public static ItemStack getBiddingItem(Player player, String ID) {
         FileConfiguration config = Files.CONFIG.getFile();
         FileConfiguration data = Files.DATA.getFile();
@@ -449,7 +451,7 @@ public class GUI implements Listener {
         }
         return Methods.addLore(item.clone(), lore);
     }
-    
+
     private static void playClick(Player player) {
         if (Files.CONFIG.getFile().contains("Settings.Sounds.Toggle")) {
             if (Files.CONFIG.getFile().getBoolean("Settings.Sounds.Toggle")) {
@@ -473,7 +475,7 @@ public class GUI implements Listener {
             }
         }
     }
-    
+
     @EventHandler
     public void onInvClose(InventoryCloseEvent e) {
         FileConfiguration config = Files.CONFIG.getFile();
@@ -485,7 +487,7 @@ public class GUI implements Listener {
             }
         }
     }
-    
+
     @EventHandler
     public void onInvClick(InventoryClickEvent e) {
         FileConfiguration config = Files.CONFIG.getFile();
@@ -675,6 +677,13 @@ public class GUI implements Listener {
                                                         }
                                                         AuctionCancelledEvent event = new AuctionCancelledEvent((sellerPlayer != null ? sellerPlayer : Methods.getOfflinePlayer(UUID.fromString(seller))), data.getItemStack("Items." + i + ".Item"), CancelledReason.ADMIN_FORCE_CANCEL);
                                                         Bukkit.getPluginManager().callEvent(event);
+                                                        Logger logger = Main.getPlugin(Main.class).getLogger();
+                                                        if (sellerPlayer != null) {
+                                                            logger.info("Auction by " + sellerPlayer.getName() + " was cancelled by " + e.getWhoClicked().getName() + " because ADMIN_FORCE_CANCEL:");
+                                                        } else {
+                                                            logger.info("Auction by " + Methods.getOfflinePlayer(UUID.fromString(seller)).getName() + " was cancelled by " + e.getWhoClicked().getName() + " because ADMIN_FORCE_CANCEL:");
+                                                        }
+                                                        ItemUtil.log(logger, item);
                                                         data.set("OutOfTime/Cancelled." + num + ".Seller", data.getString("Items." + i + ".Seller"));
                                                         data.set("OutOfTime/Cancelled." + num + ".Full-Time", data.getLong("Items." + i + ".Full-Time"));
                                                         data.set("OutOfTime/Cancelled." + num + ".StoreID", data.getInt("Items." + i + ".StoreID"));
@@ -848,6 +857,9 @@ public class GUI implements Listener {
                                                 player.sendMessage(Messages.CANCELLED_ITEM.getMessage());
                                                 AuctionCancelledEvent event = new AuctionCancelledEvent(player, data.getItemStack("Items." + i + ".Item"), CancelledReason.PLAYER_FORCE_CANCEL);
                                                 Bukkit.getPluginManager().callEvent(event);
+                                                Logger logger = Main.getPlugin(Main.class).getLogger();
+                                                logger.info("Auction by " + player.getName() + " was cancelled by " + e.getWhoClicked().getName() + " because PLAYER_FORCE_CANCEL:");
+                                                ItemUtil.log(logger, item);
                                                 int num = 1;
                                                 for (; data.contains("OutOfTime/Cancelled." + num); num++) ;
                                                 data.set("OutOfTime/Cancelled." + num + ".Seller", data.getString("Items." + i + ".Seller"));
@@ -962,5 +974,5 @@ public class GUI implements Listener {
             }
         }
     }
-    
+
 }

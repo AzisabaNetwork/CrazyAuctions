@@ -1,8 +1,6 @@
 package me.badbones69.crazyauctions.api.events;
 
-import me.badbones69.crazyauctions.Main;
 import me.badbones69.crazyauctions.api.enums.CancelledReason;
-import me.badbones69.crazyauctions.util.ItemUtil;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -19,14 +17,14 @@ import java.util.logging.Logger;
  *
  */
 public class AuctionCancelledEvent extends Event {
-    
+
     private static final HandlerList handlers = new HandlerList();
     private OfflinePlayer offlinePlayer;
     private Player onlinePlayer;
     private boolean isOnline;
     private ItemStack item;
     private CancelledReason reason;
-    
+
     /**
      *
      * @param offlinePlayer The player who's item is cancelled.
@@ -37,9 +35,8 @@ public class AuctionCancelledEvent extends Event {
         this.item = item;
         this.isOnline = false;
         this.reason = reason;
-        log();
     }
-    
+
     /**
      *
      * @param onlinePlayer The player who's item is cancelled.
@@ -50,45 +47,34 @@ public class AuctionCancelledEvent extends Event {
         this.item = item;
         this.isOnline = true;
         this.reason = reason;
-        log();
     }
 
-    private void log() {
-        Logger logger = Main.getPlugin(Main.class).getLogger();
-        if (onlinePlayer != null) {
-            logger.info("Auction by " + onlinePlayer.getName() + " was cancelled because " + reason.name() + ":");
-        } else {
-            logger.info("Auction by " + offlinePlayer.getName() + " was cancelled because " + reason.name() + ":");
-        }
-        ItemUtil.log(logger, item);
-    }
-    
     public static HandlerList getHandlerList() {
         return handlers;
     }
-    
+
     public HandlerList getHandlers() {
         return handlers;
     }
-    
+
     public OfflinePlayer getOfflinePlayer() {
         return offlinePlayer;
     }
-    
+
     public Player getOnlinePlayer() {
         return onlinePlayer;
     }
-    
+
     public boolean isOnline() {
         return isOnline;
     }
-    
+
     public ItemStack getItem() {
         return item;
     }
-    
+
     public CancelledReason getReason() {
         return reason;
     }
-    
+
 }
