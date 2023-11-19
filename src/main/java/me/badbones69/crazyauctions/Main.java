@@ -23,11 +23,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.yaml.snakeyaml.error.YAMLException;
 
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 public class Main extends JavaPlugin implements Listener {
 
@@ -236,18 +232,24 @@ public class Main extends JavaPlugin implements Listener {
                             if (amount <= 0) amount = 1;
                             if (amount > item.getAmount()) amount = item.getAmount();
                         }
-                        if (!Methods.isLong(args[1])) {
-                            HashMap<String, String> placeholders = new HashMap<>();
-                            placeholders.put("%Arg%", args[1]);
-                            placeholders.put("%arg%", args[1]);
-                            player.sendMessage(Messages.NOT_A_NUMBER.getMessage(placeholders));
-                            return true;
-                        }
                         if (Methods.getItemInHand(player).getType() == Material.AIR) {
                             player.sendMessage(Messages.DOSENT_HAVE_ITEM_IN_HAND.getMessage());
                             return false;
                         }
-                        long price = Long.parseLong(args[1]);
+                        long price;
+                        try {
+                            price = fromFriendlyString(args[1]);
+                        } catch (RuntimeException e) {
+                            try {
+                                price = Long.parseLong(args[1]);
+                            } catch (NumberFormatException ex2) {
+                                HashMap<String, String> placeholders = new HashMap<>();
+                                placeholders.put("%Arg%", args[1]);
+                                placeholders.put("%arg%", args[1]);
+                                player.sendMessage(Messages.NOT_A_NUMBER.getMessage(placeholders));
+                                return true;
+                            }
+                        }
                         if (args[0].equalsIgnoreCase("Bid")) {
                             if (price < Files.CONFIG.getFile().getLong("Settings.Minimum-Bid-Price")) {
                                 player.sendMessage(Messages.BID_PRICE_TO_LOW.getMessage());
@@ -374,7 +376,7 @@ public class Main extends JavaPlugin implements Listener {
                         getLogger().info("Added item to auction by " + player.getName() + " for $" + price);
                         ItemUtil.log(getLogger(), stack);
                         HashMap<String, String> placeholders = new HashMap<>();
-                        String priceFormatted = formatPrice(price);
+                        String priceFormatted = formatPrice(price) + " (" + toFriendlyString(price) + ")";
                         placeholders.put("%Price%", priceFormatted);
                         placeholders.put("%price%", priceFormatted);
                         player.sendMessage(Messages.ADDED_ITEM_TO_AUCTION.getMessage(placeholders));
@@ -508,5 +510,54 @@ public class Main extends JavaPlugin implements Listener {
         } else {
             return "§f" + preFormatted;
         }
+    }
+
+    public static String toFriendlyString(long number) {
+        List<String> suffixes = Arrays.asList("", "", "万", "億", "兆", "京");
+        double suffixNum = Math.ceil(("" + number).length() / 4.0);
+        double shortValue = Math.floor(number / Math.pow(10000.0, suffixNum - 1) * 100) / 100;
+        String suffix = suffixes.get((int) suffixNum);
+        if (((long) shortValue) == shortValue) {
+            return String.format("%,.0f", shortValue) + suffix;
+        }
+        return shortValue + suffix;
+    }
+
+    public static long fromFriendlyString(String s) {
+        if (s == null || s.isEmpty()) return 0;
+        s = s.replace(" ", "");
+        long multiplier = 1;
+        if (s.endsWith("万")) {
+            multiplier = 10000;
+            s = s.substring(0, s.length() - 1);
+        } else if (s.endsWith("億")) {
+            multiplier = 100000000;
+            s = s.substring(0, s.length() - 1);
+        } else if (s.endsWith("兆")) {
+            multiplier = 1000000000000L;
+            s = s.substring(0, s.length() - 1);
+        } else if (s.endsWith("京")) {
+            multiplier = 10000000000000000L;
+            s = s.substring(0, s.length() - 1);
+        } else if (s.endsWith("k") || s.endsWith("K")) {
+            multiplier = 1000;
+            s = s.substring(0, s.length() - 1);
+        } else if (s.endsWith("m") || s.endsWith("M")) {
+            multiplier = 1000000;
+            s = s.substring(0, s.length() - 1);
+        } else if (s.endsWith("b") || s.endsWith("B")) {
+            multiplier = 1000000000;
+            s = s.substring(0, s.length() - 1);
+        } else if (s.endsWith("t") || s.endsWith("T")) {
+            multiplier = 1000000000000L;
+            s = s.substring(0, s.length() - 1);
+        } else if (s.endsWith("q")) {
+            multiplier = 1000000000000000L;
+            s = s.substring(0, s.length() - 1);
+        } else if (s.endsWith("Q")) {
+            multiplier = 1000000000000000000L;
+            s = s.substring(0, s.length() - 1);
+        }
+        return (long) (Double.parseDouble(s) * multiplier);
     }
 }
