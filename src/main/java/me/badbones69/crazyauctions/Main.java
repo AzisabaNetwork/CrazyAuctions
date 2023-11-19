@@ -374,7 +374,7 @@ public class Main extends JavaPlugin implements Listener {
                         getLogger().info("Added item to auction by " + player.getName() + " for $" + price);
                         ItemUtil.log(getLogger(), stack);
                         HashMap<String, String> placeholders = new HashMap<>();
-                        String priceFormatted = String.format("%,d", price);
+                        String priceFormatted = formatPrice(price);
                         placeholders.put("%Price%", priceFormatted);
                         placeholders.put("%price%", priceFormatted);
                         player.sendMessage(Messages.ADDED_ITEM_TO_AUCTION.getMessage(placeholders));
@@ -490,5 +490,23 @@ public class Main extends JavaPlugin implements Listener {
 
     public Material getMaterial(String newMaterial, String oldMaterial) {
         return Material.matchMaterial(Version.isNewer(Version.v1_12_R1) ? newMaterial : oldMaterial);
+    }
+
+    public static String formatPrice(long l) {
+        // this code is very inefficient right?
+        String preFormatted = String.format("%,d", l);
+        if (l >= 1_000_000_000_000_000_000L) {
+            return "§5" + preFormatted;
+        } else if (l >= 1_000_000_000_000_000L) {
+            return "§6" + preFormatted;
+        } else if (l >= 1_000_000_000_000L) {
+            return "§d" + preFormatted;
+        } else if (l >= 1_000_000_000L) {
+            return "§b" + preFormatted;
+        } else if (l >= 1_000_000L) {
+            return "§a" + preFormatted;
+        } else {
+            return "§f" + preFormatted;
+        }
     }
 }
