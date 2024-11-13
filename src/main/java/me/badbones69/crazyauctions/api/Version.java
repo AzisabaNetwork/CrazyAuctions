@@ -31,16 +31,19 @@ public enum Version {
      */
     public static Version getCurrentVersion() {
         if (currentVersion == null) {
-            String ver = Bukkit.getServer().getClass().getPackage().getName();
-            int v = Integer.parseInt(ver.substring(ver.lastIndexOf('.') + 1).replace("_", "").replace("R", "").replace("v", ""));
-            for (Version version : values()) {
-                if (version.getVersionInteger() == v) {
-                    currentVersion = version;
-                    break;
+            try {
+                String ver = Bukkit.getServer().getClass().getPackage().getName();
+                int v = Integer.parseInt(ver.substring(ver.lastIndexOf('.') + 1).replace("_", "").replace("R", "").replace("v", ""));
+                for (Version version : values()) {
+                    if (version.getVersionInteger() == v) {
+                        currentVersion = version;
+                        break;
+                    }
                 }
-            }
-            if (v > Version.getLatestVersion().getVersionInteger()) {
-                currentVersion = Version.getLatestVersion();
+                if (v > Version.getLatestVersion().getVersionInteger()) {
+                    currentVersion = Version.getLatestVersion();
+                }
+            } catch (Exception ignored) {
             }
             if (currentVersion == null) {
                 currentVersion = Version.TOO_NEW;
